@@ -1,9 +1,11 @@
-package dev.calebmiller
+package dev.calebmiller.application
 
+import dev.calebmiller.WeatherService
 import io.ktor.http.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WeatherServiceTest {
