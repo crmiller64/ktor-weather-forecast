@@ -15,12 +15,9 @@ import kotlinx.html.*
 
 fun HTML.index() {
     head {
-        title("Hello from Ktor!")
+        title("Ktor Weather Forecast")
     }
     body {
-        div {
-            +"Hello from Ktor"
-        }
         div {
             id = "root"
         }
