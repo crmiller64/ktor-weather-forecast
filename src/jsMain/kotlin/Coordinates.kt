@@ -30,25 +30,18 @@ external interface CoordinatesProps : Props {
     var onSubmit: (Double, Double) -> Unit
 }
 
-external interface CoordinatesState: State {
-    var latitude: String
-    var longitude: String
-}
-
-private val initialState = object : CoordinatesState {
-    override var latitude = "0"
-    override var longitude = "0"
-}
-
 val coordinatesComponent = fc<CoordinatesProps> { props ->
 
-    var coordinatesState by useState { initialState }
+    var (latitude, setLatitude) = useState(0.0)
+    var (longitude, setLongitude) = useState(0.0)
 
     val submitHandler: (Event) -> Unit = {
         it.preventDefault()
-        if (isDouble(coordinatesState.latitude) && isDouble(coordinatesState.longitude)) {
-            props.onSubmit(coordinatesState.latitude.toDouble(), coordinatesState.longitude.toDouble())
-        }
+
+        setLatitude(0.0)
+        setLongitude(0.0)
+
+        props.onSubmit(latitude, longitude)
     }
 
     styledForm {
@@ -66,11 +59,10 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
                 type = InputType.number
                 id = "latitude"
                 name = "latitude"
-                value = coordinatesState.latitude
+                value = latitude.toString()
                 onChangeFunction = { event ->
-                    coordinatesState = setState(coordinatesState) {
-                        latitude = (event.target as HTMLInputElement).value
-                    }
+                    value = (event.target as HTMLInputElement).value
+                    setLatitude(value.toDouble())
                 }
             }
         }
@@ -86,11 +78,10 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
                 type = InputType.number
                 id = "longitude"
                 name = "longitude"
-                value = coordinatesState.longitude
+                value = longitude.toString()
                 onChangeFunction = { event ->
-                    coordinatesState = setState(coordinatesState) {
-                        longitude = (event.target as HTMLInputElement).value
-                    }
+                    value = (event.target as HTMLInputElement).value
+                    setLongitude(value.toDouble())
                 }
             }
         }
@@ -102,7 +93,7 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
             }
         }
         span {
-            +"${coordinatesState.latitude}, ${coordinatesState.longitude}"
+            +"${latitude}, ${longitude}"
             attrs {
                 id = "coordinates"
             }
