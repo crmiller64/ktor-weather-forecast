@@ -1,3 +1,4 @@
+import kotlinx.css.*
 import kotlinx.html.InputType
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
@@ -6,6 +7,24 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import react.*
 import react.dom.*
+import styled.*
+
+object CoordinatesStyles : StyleSheet("CoordinatesStyles") {
+    val wrapper by css {
+
+        display = Display.grid
+        // use repeat() to define the grid has 2 columns
+        gridTemplateColumns = GridTemplateColumns.repeat("2, max-content")
+        gap = 5.px
+
+        children("label") {
+            textAlign = TextAlign.right
+            after {
+                content = QuotedString(":")
+            }
+        }
+    }
+}
 
 external interface CoordinatesProps : Props {
     var onSubmit: (Double, Double) -> Unit
@@ -17,8 +36,8 @@ external interface CoordinatesState: State {
 }
 
 private val initialState = object : CoordinatesState {
-    override var latitude = ""
-    override var longitude = ""
+    override var latitude = "0"
+    override var longitude = "0"
 }
 
 val coordinatesComponent = fc<CoordinatesProps> { props ->
@@ -32,8 +51,9 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
         }
     }
 
-    form {
+    styledForm {
         attrs.onSubmitFunction = submitHandler
+        css { +CoordinatesStyles.wrapper }
 
         label {
             + "Latitude"
@@ -75,8 +95,17 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
             }
         }
 
+        label {
+            + "Your coordinates are"
+            attrs {
+                htmlFor = "coordinates"
+            }
+        }
         span {
-            +"Your coordinates are: ${coordinatesState.latitude}, ${coordinatesState.longitude}"
+            +"${coordinatesState.latitude}, ${coordinatesState.longitude}"
+            attrs {
+                id = "coordinates"
+            }
         }
     }
 }

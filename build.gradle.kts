@@ -1,7 +1,8 @@
 val ktorVersion = "1.6.3"
 val serializationVersion = "1.3.2"
 val coroutinesVersion = "1.6.0"
-val reactVersion = "17.0.2-pre.240-kotlin-1.5.30"
+val reactVersion = "17.0.2-pre.240-kotlin-1.5.31"
+val styledComponentsVersion = "5.3.3-pre.264-kotlin-1.5.31"
 val htmlVersion = "0.7.3"
 val logbackVersion = "1.2.3"
 
@@ -70,6 +71,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactVersion")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactVersion")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:$styledComponentsVersion")
             }
         }
         val jsTest by getting
@@ -78,6 +80,8 @@ kotlin {
 
 application {
     mainClass.set("dev.calebmiller.application.ServerKt")
+
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
 tasks.named<Copy>("jvmProcessResources") {
