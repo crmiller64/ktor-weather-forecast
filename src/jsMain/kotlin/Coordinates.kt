@@ -60,6 +60,9 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
                 id = "latitude"
                 name = "latitude"
                 value = latitude.toString()
+                max = "90"
+                min = "-90"
+                step = "0.001"
                 onChangeFunction = { event ->
                     value = (event.target as HTMLInputElement).value
                     setLatitude(value.toDouble())
@@ -79,11 +82,21 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
                 id = "longitude"
                 name = "longitude"
                 value = longitude.toString()
+                max = "180"
+                min = "-180"
+                step = "0.001"
                 onChangeFunction = { event ->
                     value = (event.target as HTMLInputElement).value
                     setLongitude(value.toDouble())
                 }
             }
+        }
+
+        styledInput {
+            css {
+                gridColumn = GridColumn("span 2")
+            }
+            attrs.type = InputType.submit
         }
 
         label {
