@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WeatherServiceTest {
@@ -22,5 +23,19 @@ class WeatherServiceTest {
         val weatherService = WeatherService()
         val response = weatherService.getWeatherForecast("https://api.weather.gov/gridpoints/DTX/0,0/forecast")
         assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
+    @Test
+    fun getWeatherForecastUrl_whenValidCoordinates_thenNonNullUrl() = runTest {
+        val weatherService = WeatherService()
+        val response = weatherService.getWeatherForecastUrl(39.7456, -97.0892)
+        assertNotNull(response)
+    }
+
+    @Test
+    fun getWeatherForecast_whenValidCoordinates_thenNonNullResponse() = runTest {
+        val weatherService = WeatherService()
+        val response = weatherService.getWeatherForecast(39.7456, -97.0892)
+        assertNotNull(response)
     }
 }

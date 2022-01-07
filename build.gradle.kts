@@ -1,8 +1,8 @@
-val ktorVersion = "1.6.3"
+val ktorVersion = "1.6.7"
 val serializationVersion = "1.3.2"
 val coroutinesVersion = "1.6.0"
-val reactVersion = "17.0.2-pre.240-kotlin-1.5.31"
-val styledComponentsVersion = "5.3.3-pre.264-kotlin-1.5.31"
+val reactVersion = "17.0.2-pre.287-kotlin-1.6.10"
+val styledComponentsVersion = "5.3.3-pre.287-kotlin-1.6.10"
 val htmlVersion = "0.7.3"
 val logbackVersion = "1.2.3"
 
@@ -59,8 +59,11 @@ kotlin {
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$htmlVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+                implementation("io.github.microutils:kotlin-logging-jvm:2.1.20")
             }
         }
         val jvmTest by getting {

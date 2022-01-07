@@ -2,11 +2,11 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import react.Props
 import react.dom.h1
-import react.functionComponent
+import react.fc
 
 private val scope = MainScope()
 
-val app = functionComponent<Props> {
+val app = fc<Props> {
 
     h1 { + "Weather Forecast" }
 

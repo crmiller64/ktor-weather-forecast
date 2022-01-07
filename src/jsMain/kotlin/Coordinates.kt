@@ -13,7 +13,7 @@ object CoordinatesStyles : StyleSheet("CoordinatesStyles") {
     val wrapper by css {
 
         display = Display.grid
-        // use repeat() to define the grid has 2 columns
+        // use repeat to define the grid has 2 columns
         gridTemplateColumns = GridTemplateColumns.repeat("2, max-content")
         gap = 5.px
 
@@ -37,10 +37,6 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
 
     val submitHandler: (Event) -> Unit = {
         it.preventDefault()
-
-        setLatitude(0.0)
-        setLongitude(0.0)
-
         props.onSubmit(latitude, longitude)
     }
 
