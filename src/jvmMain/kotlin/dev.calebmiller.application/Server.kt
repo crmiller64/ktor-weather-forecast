@@ -1,5 +1,6 @@
 package dev.calebmiller.application
 
+import dev.calebmiller.application.service.weather.WeatherService
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.respondHtml
@@ -54,7 +55,9 @@ fun main() {
                     val latitude = call.request.queryParameters["latitude"]?.toDoubleOrNull()
                     val longitude = call.request.queryParameters["longitude"]?.toDoubleOrNull()
                     if (latitude != null && longitude != null) {
-                        call.respond(weatherService.getWeatherForecast(latitude, longitude))
+                        val forecast = weatherService.getWeatherForecast(latitude, longitude)
+                        // TODO return weather forecast object
+                        call.respond(HttpStatusCode.OK, "this is a valid request")
                     } else {
                         call.respond(HttpStatusCode.BadRequest, "the supplied coordinates are not valid")
                     }
