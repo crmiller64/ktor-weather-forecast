@@ -4,14 +4,16 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.respondHtml
 import io.ktor.http.*
-import io.ktor.routing.get
-import io.ktor.routing.routing
 import io.ktor.serialization.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.html.*
+
+val weatherService = WeatherService()
 
 fun HTML.index() {
     head {
@@ -46,6 +48,17 @@ fun main() {
             }
             static("/static") {
                 resources()
+            }
+            route("/weather") {
+                get("/forecast") {
+                    val latitude = call.request.queryParameters["latitude"]?.toDoubleOrNull()
+                    val longitude = call.request.queryParameters["longitude"]?.toDoubleOrNull()
+                    if (latitude != null && longitude != null) {
+                        call.respond(weatherService.getWeatherForecast(latitude, longitude))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, "the supplied coordinates are not valid")
+                    }
+                }
             }
         }
     }.start(wait = true)

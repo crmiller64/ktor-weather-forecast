@@ -1,8 +1,9 @@
-package dev.calebmiller
+package dev.calebmiller.application
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -19,7 +20,9 @@ class WeatherService {
 
     private val client = HttpClient(CIO) {
         install(Logging)
-        install(JsonFeature)
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+        }
         expectSuccess = false
     }
 
@@ -39,11 +42,11 @@ class WeatherService {
      * @param latitude the latitude in decimal form
      * @param longitude the longitude in decimal form
      */
-    suspend fun getWeatherForecast(latitude: Double, longitude: Double): JsonObject? {
+    suspend fun getWeatherForecast(latitude: Double, longitude: Double): JsonObject {
         getWeatherForecastUrl(latitude, longitude)?.let { url ->
-            return client.get<JsonObject>(url)
+            return client.get(url)
         }
-        return null
+        return JsonObject(emptyMap())
     }
 
     /**

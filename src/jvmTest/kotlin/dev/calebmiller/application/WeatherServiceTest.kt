@@ -1,6 +1,5 @@
 package dev.calebmiller.application
 
-import dev.calebmiller.WeatherService
 import io.ktor.http.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
