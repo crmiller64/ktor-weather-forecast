@@ -55,9 +55,9 @@ fun main() {
                     val latitude = call.request.queryParameters["latitude"]?.toDoubleOrNull()
                     val longitude = call.request.queryParameters["longitude"]?.toDoubleOrNull()
                     if (latitude != null && longitude != null) {
-                        val forecast = weatherService.getWeatherForecast(latitude, longitude)
-                        // TODO return weather forecast object
-                        call.respond(HttpStatusCode.OK, "this is a valid request")
+                        weatherService.getWeatherForecast(latitude, longitude)?.let {
+                            call.respond(it)
+                        }
                     } else {
                         call.respond(HttpStatusCode.BadRequest, "the supplied coordinates are not valid")
                     }

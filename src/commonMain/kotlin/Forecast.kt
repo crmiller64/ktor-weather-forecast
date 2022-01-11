@@ -1,14 +1,18 @@
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Forecast(
-    val forecastProperties: ForecastProperties
+    val properties: ForecastProperties
 )
 
+@Serializable
 data class ForecastProperties(
-    val forecastPeriod: List<ForecastPeriod>
+    val period: List<ForecastPeriod>
 )
 
+@Serializable
 data class ForecastPeriod(
     val number: Int,
     val name: String,
@@ -19,7 +23,7 @@ data class ForecastPeriod(
     val isDaytime: Boolean,
     val temperature: Int,
     val temperatureUnit: String,
-    val temperatureTrend: String,
+    val temperatureTrend: String?,
     val windSpeed: String,
     val windDirection: String,
     val shortForecast: String,

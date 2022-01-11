@@ -1,5 +1,6 @@
 package dev.calebmiller.application.service.weather
 
+import Forecast
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
@@ -47,7 +48,8 @@ class WeatherService {
      */
     suspend fun getWeatherForecast(latitude: Double, longitude: Double): Forecast? {
         return getWeatherForecastUrl(latitude, longitude)?.let { url ->
-            client.get(url)
+            val response = client.get<WeatherForecast>(url)
+            return toForecast(response)
         }
     }
 
