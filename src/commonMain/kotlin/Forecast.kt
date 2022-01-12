@@ -9,7 +9,7 @@ data class Forecast(
 
 @Serializable
 data class ForecastProperties(
-    val period: List<ForecastPeriod>
+    val periods: List<ForecastPeriod>
 )
 
 @Serializable
@@ -29,3 +29,5 @@ data class ForecastPeriod(
     val shortForecast: String,
     val detailedForecast: String
 )
+
+fun emptyForecast() = Forecast(ForecastProperties(emptyList()))

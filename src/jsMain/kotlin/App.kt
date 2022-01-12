@@ -1,11 +1,9 @@
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.html.id
-import kotlinx.serialization.json.Json
 import react.Props
-import react.dom.attrs
-import react.dom.div
 import react.dom.h1
+import react.dom.html.ReactHTML.li
+import react.dom.html.ReactHTML.ul
 import react.fc
 import react.useState
 
@@ -13,22 +11,24 @@ private val scope = MainScope()
 
 val app = fc<Props> {
 
-    var (forecast, setForecast) = useState("")
+    var (forecast, setForecast) = useState(emptyForecast())
 
     h1 { + "Weather Forecast" }
 
     child(coordinatesComponent) {
         attrs.onSubmit = { latitude, longitude ->
             scope.launch {
-                setForecast(getWeatherForecast(latitude, longitude).toString())
+                setForecast(getWeatherForecast(latitude, longitude))
             }
         }
     }
 
-    div {
-        + forecast
-        attrs {
-            id = "forecast"
+    ul {
+        forecast.properties.periods.sortedBy(ForecastPeriod::number).forEach { period ->
+            li {
+                key = "${period.number}-${period.name}"
+                + period.toString()
+            }
         }
     }
 }
