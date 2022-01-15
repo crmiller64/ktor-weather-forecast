@@ -1,5 +1,9 @@
-import kotlinx.css.*
+import kotlinx.css.QuotedString
+import kotlinx.css.TextAlign
+import kotlinx.css.content
+import kotlinx.css.textAlign
 import kotlinx.html.InputType
+import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onSubmitFunction
@@ -11,11 +15,6 @@ import styled.*
 
 object CoordinatesStyles : StyleSheet("CoordinatesStyles") {
     val wrapper by css {
-
-        display = Display.grid
-        // use repeat to define the grid has 2 columns
-        gridTemplateColumns = GridTemplateColumns.repeat("2, max-content")
-        gap = 5.px
 
         children("label") {
             textAlign = TextAlign.right
@@ -44,68 +43,104 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
         attrs.onSubmitFunction = submitHandler
         css { +CoordinatesStyles.wrapper }
 
-        label {
-            + "Latitude"
-            attrs {
-                htmlFor = "latitude"
+        div {
+            attrs.classes = setOf("row", "mb-3", "")
+
+            label {
+                + "Latitude"
+                attrs {
+                    classes = setOf("col-sm-1", "col-form-label")
+                    htmlFor = "latitude"
+                }
             }
-        }
-        input {
-            attrs {
-                type = InputType.number
-                id = "latitude"
-                name = "latitude"
-                value = latitude.toString()
-                max = "90"
-                min = "-90"
-                step = "0.001"
-                onChangeFunction = { event ->
-                    value = (event.target as HTMLInputElement).value
-                    setLatitude(value.toDouble())
+            div {
+                attrs.classes += "col-sm-2"
+
+                input {
+                    attrs {
+                        classes += "form-control"
+                        type = InputType.number
+                        id = "latitude"
+                        name = "latitude"
+                        value = latitude.toString()
+                        max = "90"
+                        min = "-90"
+                        step = "0.001"
+                        onChangeFunction = { event ->
+                            value = (event.target as HTMLInputElement).value
+                            setLatitude(value.toDouble())
+                        }
+                    }
+                }
+            }
+            div {
+                attrs.classes += "col-auto"
+
+                span {
+                    attrs.classes += "form-text"
+                    + " Must be a number between 90 and -90, and up to 3 decimal places."
                 }
             }
         }
 
-        label {
-            + "Longitude"
-            attrs {
-                htmlFor = "longitude"
+        div {
+            attrs.classes = setOf("row", "mb-3")
+
+            label {
+                + "Longitude"
+                attrs {
+                    classes = setOf("col-sm-1", "col-form-label")
+                    htmlFor = "longitude"
+                }
             }
-        }
-        input {
-            attrs {
-                type = InputType.number
-                id = "longitude"
-                name = "longitude"
-                value = longitude.toString()
-                max = "180"
-                min = "-180"
-                step = "0.001"
-                onChangeFunction = { event ->
-                    value = (event.target as HTMLInputElement).value
-                    setLongitude(value.toDouble())
+            div {
+                attrs.classes += "col-sm-2"
+
+                input {
+                    attrs {
+                        classes += "form-control"
+                        type = InputType.number
+                        id = "longitude"
+                        name = "longitude"
+                        value = longitude.toString()
+                        max = "180"
+                        min = "-180"
+                        step = "0.001"
+                        onChangeFunction = { event ->
+                            value = (event.target as HTMLInputElement).value
+                            setLongitude(value.toDouble())
+                        }
+                    }
+                }
+            }
+            div {
+                attrs.classes += "col-auto"
+
+                span {
+                    attrs.classes += "form-text"
+                    + " Must be a number between 180 and -180, and up to 3 decimal places."
                 }
             }
         }
 
-        styledInput {
-            css {
-                gridColumn = GridColumn("span 2")
-            }
-            attrs.type = InputType.submit
+        button {
+            attrs.classes = setOf("btn", "btn-primary")
+            + "Submit"
         }
 
-        label {
-            + "Your coordinates are"
-            attrs {
-                htmlFor = "coordinates"
+
+        div {
+            attrs.classes = setOf("row", "mb-3")
+
+            div {
+                attrs.classes += "col-auto"
+
+                span {
+                    attrs.classes += "form-text"
+                    + "Your coordinates are: ${latitude}, ${longitude}"
+                }
             }
         }
-        span {
-            +"${latitude}, ${longitude}"
-            attrs {
-                id = "coordinates"
-            }
-        }
+
     }
 }
