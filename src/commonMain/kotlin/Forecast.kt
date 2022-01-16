@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Forecast(
-    val properties: ForecastProperties
+    val properties: ForecastProperties? = ForecastProperties()
 )
 
 @Serializable
 data class ForecastProperties(
-    val periods: List<ForecastPeriod>
+    val periods: List<ForecastPeriod>? = emptyList()
 )
 
 @Serializable
@@ -23,7 +23,7 @@ data class ForecastPeriod(
     val isDaytime: Boolean,
     val temperature: Int,
     val temperatureUnit: String,
-    val temperatureTrend: String?,
+    val temperatureTrend: String? = null,
     val windSpeed: String,
     val windDirection: String,
     val shortForecast: String,

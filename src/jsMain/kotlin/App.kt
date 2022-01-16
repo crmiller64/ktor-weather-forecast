@@ -1,10 +1,9 @@
-import kotlinx.browser.document
+import io.ktor.client.features.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.role
-import org.w3c.dom.HTMLElement
 import react.Props
 import react.dom.attrs
 import react.dom.div
@@ -21,6 +20,7 @@ private val scope = MainScope()
 val app = fc<Props> {
 
     var (forecast, setForecast) = useState(emptyForecast())
+    var (loading, setLoading) = useState(false)
 
     div {
         attrs.classes += "container"
@@ -29,36 +29,41 @@ val app = fc<Props> {
 
         child(coordinatesComponent) {
             attrs.onSubmit = { latitude, longitude ->
+                setLoading(true)
                 scope.launch {
-                    displayLoader(true)
-                    setForecast(getWeatherForecast(latitude, longitude))
-                    displayLoader(false)
+                    try {
+                        setForecast(getWeatherForecast(latitude, longitude))
+                    } catch (e: ServerResponseException) {
+                        // TODO
+                    }
+                    setLoading(false)
                 }
             }
         }
 
-        styledDiv {
-            attrs {
-                id = "loader"
-                classes += "justify-content-center"
-            }
-            css.put("display", "none")
-
-            div {
+        if (loading) {
+            styledDiv {
                 attrs {
-                    classes += "spinner-border"
-                    role = "status"
+                    id = "loader"
+                    classes = setOf("d-flex", "justify-content-center")
                 }
 
-                span {
-                    attrs.classes += "visually-hidden"
-                    + "Loading..."
+                div {
+                    attrs {
+                        classes += "spinner-border"
+                        role = "status"
+                    }
+
+                    span {
+                        attrs.classes += "visually-hidden"
+                        + "Loading..."
+                    }
                 }
             }
         }
 
         ul {
-            forecast.properties.periods.sortedBy(ForecastPeriod::number).forEach { period ->
+            forecast.properties?.periods?.sortedBy(ForecastPeriod::number)?.forEach { period ->
                 li {
                     key = "${period.number}-${period.name}"
                     + period.toString()
@@ -66,9 +71,4 @@ val app = fc<Props> {
             }
         }
     }
-}
-
-fun displayLoader(display: Boolean) {
-    val value = if (display) "flex" else "none"
-    (document.getElementById("loader") as HTMLElement).style.display = value
 }

@@ -19,12 +19,12 @@ import java.time.format.DateTimeFormatter
 
 @Serializable
 data class WeatherForecast(
-    val properties: WeatherForecastProperties
+    val properties: WeatherForecastProperties? = WeatherForecastProperties()
 )
 
 @Serializable
 data class WeatherForecastProperties(
-    val periods: List<WeatherForecastPeriod>
+    val periods: List<WeatherForecastPeriod>? = emptyList()
 )
 
 @Serializable
@@ -38,7 +38,7 @@ data class WeatherForecastPeriod(
     val isDaytime: Boolean,
     val temperature: Int,
     val temperatureUnit: String,
-    val temperatureTrend: String?,
+    val temperatureTrend: String? = null,
     val windSpeed: String,
     val windDirection: String,
     val shortForecast: String,
@@ -61,7 +61,7 @@ object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
 
 // translate weather.gov response into our domain object
 fun toForecast(weatherForecast: WeatherForecast): Forecast {
-    val periods = weatherForecast.properties.periods.map { w ->
+    val periods = weatherForecast.properties?.periods?.map { w ->
         // TODO may need to translate offsetdatetime to client timezone instant before setting to this object
         // i.e. offsetdatetime.sameInstantAtTimeZone(clientTimezone/clientUtcOffset)
         val startTime = LocalDateTime(
