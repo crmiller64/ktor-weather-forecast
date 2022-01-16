@@ -47,9 +47,16 @@ class WeatherService {
      * @param longitude the longitude in decimal form
      */
     suspend fun getWeatherForecast(latitude: Double, longitude: Double): Forecast? {
-        return getWeatherForecastUrl(latitude, longitude)?.let { url ->
+        val weatherGrid = getWeatherGrid(latitude, longitude)
+        val forecastUrl = parseUrl(weatherGrid.properties.forecast)
+
+        return forecastUrl?.let { url ->
             val response = client.get<WeatherForecast>(url)
-            return toForecast(response)
+            return toForecast(
+                weatherGrid.properties.relativeLocation.properties.city,
+                weatherGrid.properties.relativeLocation.properties.state,
+                response
+            )
         }
     }
 
@@ -75,16 +82,38 @@ class WeatherService {
             if (properties is JsonObject) {
                 properties["forecast"]?.let { forecast ->
                     if (forecast is JsonPrimitive && forecast.isString) {
-                        try {
-                            return Url(forecast.content)
-                        } catch (e: URLParserException) {
-                            logger.error(e) { "unable to parse forecast url" }
-                        }
+                        return parseUrl(forecast.content)
                     }
                 }
             }
         }
 
+        return null
+    }
+
+    /**
+     * Get the weather grid data from the weather.gov API using the given coordinates.
+     *
+     * @param latitude the latitude in decimal form
+     * @param longitude the longitude in decimal form
+     */
+    suspend fun getWeatherGrid(latitude: Double, longitude: Double): WeatherGrid {
+        return client.request {
+            method = HttpMethod.Get
+            url {
+                protocol = URLProtocol.HTTPS
+                host = weatherApiHost
+                path("points", "${latitude},${longitude}")
+            }
+        }
+    }
+
+    private fun parseUrl(url: String): Url? {
+        try {
+            return Url(url)
+        } catch (e: URLParserException) {
+            logger.error(e) { "unable to parse url" }
+        }
         return null
     }
 }

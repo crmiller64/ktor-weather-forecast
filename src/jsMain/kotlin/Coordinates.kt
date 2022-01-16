@@ -40,11 +40,14 @@ val coordinatesComponent = fc<CoordinatesProps> { props ->
     }
 
     styledForm {
-        attrs.onSubmitFunction = submitHandler
         css { +CoordinatesStyles.wrapper }
+        attrs {
+            onSubmitFunction = submitHandler
+            attrs.classes += "mb-3"
+        }
 
         div {
-            attrs.classes = setOf("row", "mb-3", "")
+            attrs.classes = setOf("row", "mb-3")
 
             label {
                 + "Latitude"

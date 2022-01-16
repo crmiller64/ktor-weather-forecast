@@ -5,8 +5,9 @@ import kotlinx.html.classes
 import react.Props
 import react.dom.div
 import react.dom.h1
-import react.dom.html.ReactHTML.li
-import react.dom.html.ReactHTML.ul
+import react.dom.h2
+import react.dom.li
+import react.dom.ul
 import react.fc
 import react.useState
 
@@ -40,13 +41,22 @@ val app = fc<Props> {
             child(loaderComponent)
         }
 
-        ul {
-            forecast.properties?.periods?.sortedBy(ForecastPeriod::number)?.forEach { period ->
-                li {
-                    key = "${period.number}-${period.name}"
-                    + period.toString()
+        if (forecast.city.isNotBlank() && forecast.state.isNotBlank()) {
+            h2 { + "Forecast for ${forecast.city}, ${forecast.state}" }
+        }
+
+        div {
+            attrs.classes = setOf("row")
+
+            ul {
+                forecast.properties.periods.sortedBy(ForecastPeriod::number).forEach { period ->
+                    li {
+                        key = "${period.number}-${period.name}"
+                        + period.toString()
+                    }
                 }
             }
         }
+
     }
 }

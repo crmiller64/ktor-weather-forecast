@@ -38,4 +38,11 @@ class WeatherServiceTest {
         val response = weatherService.getWeatherForecast(39.7456, -97.0892)
         assertNotNull(response)
     }
+
+    @Test
+    fun getWeatherGrid_whenValidCoordinates_thenNonNullResponse() = runTest {
+        val weatherService = WeatherService()
+        val response = weatherService.getWeatherGrid(39.7456, -97.0892)
+        assertNotNull(response)
+    }
 }
