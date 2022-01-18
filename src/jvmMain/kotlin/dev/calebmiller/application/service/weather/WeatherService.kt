@@ -2,6 +2,7 @@ package dev.calebmiller.application.service.weather
 
 import Forecast
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
@@ -9,6 +10,9 @@ import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.util.*
+import kotlinx.html.InputType
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import mu.KotlinLogging
@@ -48,7 +52,7 @@ class WeatherService(engine: HttpClientEngine) {
      */
     suspend fun getWeatherForecast(latitude: Double, longitude: Double): Forecast? {
         val weatherGrid = getWeatherGrid(latitude, longitude)
-        val forecastUrl = parseUrl(weatherGrid.properties.forecast)
+        val forecastUrl = weatherGrid?.let { parseUrl(it.properties.forecast) }
 
         return forecastUrl?.let { url ->
             val response = client.get<WeatherForecast>(url)
@@ -97,8 +101,8 @@ class WeatherService(engine: HttpClientEngine) {
      * @param latitude the latitude in decimal form
      * @param longitude the longitude in decimal form
      */
-    suspend fun getWeatherGrid(latitude: Double, longitude: Double): WeatherGrid {
-        return client.request {
+    suspend fun getWeatherGrid(latitude: Double, longitude: Double): WeatherGrid? {
+        val response: HttpResponse = client.request {
             method = HttpMethod.Get
             url {
                 protocol = URLProtocol.HTTPS
@@ -106,6 +110,11 @@ class WeatherService(engine: HttpClientEngine) {
                 path("points", "${latitude},${longitude}")
             }
         }
+
+        if (response.status == HttpStatusCode.OK) {
+            return response.receive()
+        }
+        return null
     }
 
     private fun parseUrl(url: String): Url? {

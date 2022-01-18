@@ -11,6 +11,7 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WeatherServiceTest {
@@ -110,5 +111,22 @@ class WeatherServiceTest {
         val weatherService = WeatherService(mockEngine)
         val response = weatherService.getWeatherGrid(39.7456, -97.0892)
         assertNotNull(response)
+    }
+
+    @Test
+    fun getWeatherGrid_whenInvalidCoordinates_thenNullResponse() = runTest {
+        val responseBody = Files.readAllBytes(Path("src/jvmTest/resources/weatherGridNotFoundResponse.json"))
+
+        val mockEngine = MockEngine { request ->
+            respond(
+                content = ByteReadChannel(responseBody),
+                status = HttpStatusCode.NotFound,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val weatherService = WeatherService(mockEngine)
+        val response = weatherService.getWeatherGrid(90.0, -180.0)
+        assertNull(response)
     }
 }
