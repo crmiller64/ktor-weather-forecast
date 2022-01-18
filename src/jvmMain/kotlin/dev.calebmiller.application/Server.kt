@@ -2,6 +2,7 @@ package dev.calebmiller.application
 
 import dev.calebmiller.application.service.weather.WeatherService
 import io.ktor.application.*
+import io.ktor.client.engine.cio.*
 import io.ktor.features.*
 import io.ktor.html.respondHtml
 import io.ktor.http.*
@@ -14,7 +15,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
-val weatherService = WeatherService()
+val weatherService = WeatherService(CIO.create())
 
 fun HTML.index() {
     head {

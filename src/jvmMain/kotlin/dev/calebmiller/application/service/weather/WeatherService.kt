@@ -2,7 +2,7 @@ package dev.calebmiller.application.service.weather
 
 import Forecast
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
@@ -13,13 +13,13 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import mu.KotlinLogging
 
-class WeatherService {
+class WeatherService(engine: HttpClientEngine) {
 
     private val logger = KotlinLogging.logger {}
 
     private val weatherApiHost = "api.weather.gov"
 
-    private val client = HttpClient(CIO) {
+    private val client = HttpClient(engine) {
         install(Logging)
         install(JsonFeature) {
             serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
