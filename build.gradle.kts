@@ -1,102 +1,58 @@
-val ktorVersion = "1.6.7"
-val serializationVersion = "1.3.2"
-val coroutinesVersion = "1.6.0"
-val reactVersion = "17.0.2-pre.287-kotlin-1.6.10"
-val styledComponentsVersion = "5.3.3-pre.287-kotlin-1.6.10"
-val htmlVersion = "0.7.3"
-val logbackVersion = "1.2.3"
+val ktor_version: String by project
+val kotlin_version: String by project
+val logback_version: String by project
+val coroutines_version: String by project
+val kotlin_datetime_version: String by project
+val koin_version: String by project
+val koin_test_version: String by project
+val kotlin_logging_version: String by project
 
 plugins {
-    kotlin("multiplatform") version "1.6.10"
     application
+    kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
 }
 
 group = "dev.calebmiller"
 version = "1.0.0"
 
+application {
+    mainClass.set("io.ktor.server.netty.EngineMain")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
 repositories {
     mavenCentral()
 }
 
-kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-        withJava()
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
-    js(LEGACY) {
-        binaries.executable()
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-    }
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation("io.ktor:ktor-client-mock:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-server-netty:$ktorVersion")
-                implementation("io.ktor:ktor-html-builder:$ktorVersion")
-                implementation("io.ktor:ktor-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-client-cio:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$htmlVersion")
-                implementation("ch.qos.logback:logback-classic:$logbackVersion")
+dependencies {
+    implementation("io.ktor:ktor-server-core:$ktor_version")
+    implementation("io.ktor:ktor-serialization:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_datetime_version")
 
-                implementation("io.github.microutils:kotlin-logging-jvm:2.1.20")
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactVersion")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactVersion")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:$styledComponentsVersion")
-            }
-        }
-        val jsTest by getting
-    }
-}
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("io.github.microutils:kotlin-logging-jvm:$kotlin_logging_version")
 
-application {
-    mainClass.set("dev.calebmiller.application.ServerKt")
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
-}
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
 
-tasks.named<Copy>("jvmProcessResources") {
-    val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
-    from(jsBrowserDistribution)
-}
+    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
 
-tasks.named<JavaExec>("run") {
-    dependsOn(tasks.named<Jar>("jvmJar"))
-    classpath(tasks.named<Jar>("jvmJar"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+
+    testImplementation("io.insert-koin:koin-test:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
 }
 
 tasks.test {

@@ -1,3 +1,3 @@
 
-rootProject.name = "kotlin-weather-forecast"
+rootProject.name = "ktor-weather-forecast"
 

@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "query": ["bay", "city", "mi"],
+  "features": [
+    {
+      "id": "place.9715322999261580",
+      "type": "Feature",
+      "place_type": ["place"],
+      "relevance": 1,
+      "properties": { "wikidata": "Q746820" },
+      "text": "Bay City",
+      "place_name": "Bay City, Michigan, United States",
+      "bbox": [-84.05007894, 43.479218027, -83.739482119, 43.701270765],
+      "center": [-83.8889, 43.5945],
+      "geometry": { "type": "Point", "coordinates": [-83.8889, 43.5945] },
+      "context": [
+        {
+          "id": "district.16694475684699480",
+          "wikidata": "Q74704",
+          "text": "Bay County"
+        },
+        {
+          "id": "region.9469196105857470",
+          "short_code": "US-MI",
+          "wikidata": "Q1166",
+          "text": "Michigan"
+        },
+        {
+          "id": "country.19678805456372290",
+          "wikidata": "Q30",
+          "short_code": "us",
+          "text": "United States"
+        }
+      ]
+    }
+  ],
+  "attribution": "NOTICE: © 2022 Mapbox and its suppliers. All rights reserved. Use of this data is subject to the Mapbox Terms of Service (https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained. POI(s) provided by Foursquare."
+}
