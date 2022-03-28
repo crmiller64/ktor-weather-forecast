@@ -1,6 +1,8 @@
-package dev.calebmiller.application.service.weather
+package dev.calebmiller.application.service.weather.api
 
 import kotlinx.serialization.Serializable
+
+/* Representation of grid data received from the weather.gov API. */
 
 @Serializable
 data class WeatherGrid(

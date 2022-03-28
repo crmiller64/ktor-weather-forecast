@@ -1,4 +1,3 @@
-import io.ktor.client.features.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
@@ -15,7 +14,7 @@ private val scope = MainScope()
 
 val app = fc<Props> {
 
-    var (forecast, setForecast) = useState(emptyForecast())
+    var (forecast, setForecast) = useState(Forecast())
     var (loading, setLoading) = useState(false)
 
     div {
@@ -25,12 +24,13 @@ val app = fc<Props> {
 
         child(coordinatesComponent) {
             attrs.onSubmit = { latitude, longitude ->
+                setForecast(Forecast())
                 setLoading(true)
                 scope.launch {
                     try {
                         setForecast(getWeatherForecast(latitude, longitude))
-                    } catch (e: ResponseException) {
-                        // TODO
+                    } catch (e: Exception) {
+                        // TODO show error alert with exception message
                     }
                     setLoading(false)
                 }
@@ -41,9 +41,10 @@ val app = fc<Props> {
             child(loaderComponent)
         }
 
-        if (forecast.city.isNotBlank() && forecast.state.isNotBlank()) {
-            h2 { + "Forecast for ${forecast.city}, ${forecast.state}" }
-        }
+        // TODO will switch user input from lat+lon to city+state
+        // if (forecast.city.isNotBlank() && forecast.state.isNotBlank()) {
+        //     h2 { + "Forecast for ${forecast.city}, ${forecast.state}" }
+        // }
 
         div {
             attrs.classes = setOf("row")

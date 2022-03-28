@@ -1,4 +1,4 @@
-package dev.calebmiller.application.service.weather
+package dev.calebmiller.application.service.weather.api
 
 import Forecast
 import ForecastPeriod
@@ -60,7 +60,7 @@ object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
 }
 
 // translate weather.gov response into our domain object
-fun toForecast(city: String, state: String, weatherForecast: WeatherForecast): Forecast {
+fun toForecast(weatherForecast: WeatherForecast): Forecast {
     val periods = weatherForecast.properties.periods.map { w ->
         // TODO may need to translate offsetdatetime to client timezone instant before setting to this object
         // i.e. offsetdatetime.sameInstantAtTimeZone(clientTimezone/clientUtcOffset)
@@ -100,5 +100,5 @@ fun toForecast(city: String, state: String, weatherForecast: WeatherForecast): F
             w.detailedForecast
         )
     }
-    return Forecast(city, state, ForecastProperties(periods))
+    return Forecast(ForecastProperties(periods))
 }

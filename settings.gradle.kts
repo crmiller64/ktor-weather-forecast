@@ -1,3 +1,3 @@
 
-rootProject.name = "async-weather-forecast"
+rootProject.name = "kotlin-weather-forecast"
 

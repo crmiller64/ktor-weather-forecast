@@ -4,14 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Forecast(
-    val city: String,
-    val state: String,
-    val properties: ForecastProperties
+    val properties: ForecastProperties = ForecastProperties()
 )
 
 @Serializable
 data class ForecastProperties(
-    val periods: List<ForecastPeriod>
+    val periods: List<ForecastPeriod> = emptyList()
 )
 
 @Serializable
@@ -31,5 +29,3 @@ data class ForecastPeriod(
     val shortForecast: String,
     val detailedForecast: String
 )
-
-fun emptyForecast() = Forecast("", "", ForecastProperties(emptyList()))

@@ -1,6 +1,8 @@
 package dev.calebmiller.application
 
 import dev.calebmiller.application.service.weather.WeatherService
+import dev.calebmiller.application.service.weather.api.WeatherApiException
+import dev.calebmiller.application.service.weather.api.toForecast
 import io.ktor.application.*
 import io.ktor.client.engine.cio.*
 import io.ktor.features.*
@@ -14,6 +16,9 @@ import io.ktor.http.content.static
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 val weatherService = WeatherService(CIO.create())
 
@@ -65,14 +70,21 @@ fun main() {
             }
             route("/weather") {
                 get("/forecast") {
+                    // TODO move to controller class?
                     val latitude = call.request.queryParameters["latitude"]?.toDoubleOrNull()
                     val longitude = call.request.queryParameters["longitude"]?.toDoubleOrNull()
                     if (latitude != null && longitude != null) {
-                        weatherService.getWeatherForecast(latitude, longitude)?.let {
-                            call.respond(it)
+                        try {
+                            call.respond(toForecast( weatherService.getWeatherForecast(latitude, longitude)))
+                        } catch (e: WeatherApiException) {
+                            logger.error("Error retrieving weather data: \\n${e.error}", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                "Error retrieving weather data. Please check server logs for details"
+                            )
                         }
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, "the supplied coordinates are not valid")
+                        call.respond(HttpStatusCode.BadRequest, "The supplied coordinates are not valid.")
                     }
                 }
             }
