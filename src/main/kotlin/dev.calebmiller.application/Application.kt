@@ -1,5 +1,6 @@
 package dev.calebmiller.application
 
+import dev.calebmiller.application.config.setupConfig
 import dev.calebmiller.application.di.appModule
 import dev.calebmiller.application.plugins.configureHTTP
 import dev.calebmiller.application.plugins.configureRouting
@@ -20,4 +21,6 @@ fun Application.module(koinModules: List<Module> = listOf(appModule)) {
         SLF4JLogger()
         modules(appModule)
     }
+
+    setupConfig()
 }

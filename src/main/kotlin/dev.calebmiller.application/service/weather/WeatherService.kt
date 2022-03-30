@@ -69,7 +69,7 @@ class WeatherService(engine: HttpClientEngine, private val mapboxService: Mapbox
         } else {
             // error received when fetching forecast data
             val error: WeatherApiError = response.receive()
-            logger.error{ "Error retrieving weather forecast data: \\n$error" }
+            logger.error{ "Error retrieving weather forecast data: \n$error" }
             throw WeatherApiException("Error fetching weather forecast data from weather API.", error)
         }
     }
@@ -95,7 +95,7 @@ class WeatherService(engine: HttpClientEngine, private val mapboxService: Mapbox
             return response.receive()
         } else {
             val error: WeatherApiError = response.receive()
-            logger.error{ "Error retrieving weather grid data: \\n$error" }
+            logger.error{ "Error retrieving weather grid data: \n$error" }
             throw WeatherApiException("Error fetching weather grid data from weather API.", error)
         }
     }

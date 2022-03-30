@@ -70,7 +70,7 @@ class MapboxService(engine: HttpClientEngine, appConfig: AppConfig) {
             return response.receive()
         } else {
             val error: MapboxApiError = response.receive()
-            logger.error{ "Error retrieving geocoding data: \\n$error" }
+            logger.error{ "Error retrieving geocoding data: \n$error" }
             throw MapboxApiException("Error fetching geocoding data from Mapbox API.", error)
         }
     }
