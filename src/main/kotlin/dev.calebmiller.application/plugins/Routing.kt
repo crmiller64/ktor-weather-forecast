@@ -20,11 +20,11 @@ fun Application.configureRouting() {
         route("/weather") {
             get("/forecast") {
                 // TODO move to controller class?
-                val latitude = call.request.queryParameters["latitude"]?.toDoubleOrNull()
-                val longitude = call.request.queryParameters["longitude"]?.toDoubleOrNull()
-                if (latitude != null && longitude != null) {
+                val city = call.request.queryParameters["city"]
+                val state = call.request.queryParameters["state"]
+                if (city != null && state != null) {
                     try {
-                        call.respond(toForecast( weatherService.getWeatherForecast(latitude, longitude)))
+                        call.respond(toForecast( weatherService.getWeatherForecast(city, state)))
                     } catch (e: WeatherApiException) {
                         call.respond(
                             HttpStatusCode.InternalServerError,
@@ -32,7 +32,7 @@ fun Application.configureRouting() {
                         )
                     }
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "The supplied coordinates are not valid.")
+                    call.respond(HttpStatusCode.BadRequest, "The supplied parameters are not valid.")
                 }
             }
         }
