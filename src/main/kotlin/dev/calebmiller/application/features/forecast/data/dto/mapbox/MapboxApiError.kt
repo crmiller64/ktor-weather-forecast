@@ -1,6 +1,5 @@
-package dev.calebmiller.application.service.mapbox.api
+package dev.calebmiller.application.features.forecast.data.dto.mapbox
 
-import dev.calebmiller.application.service.weather.api.WeatherApiError
 import kotlinx.serialization.Serializable
 
 @Serializable

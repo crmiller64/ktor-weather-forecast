@@ -1,7 +1,7 @@
-package dev.calebmiller.application
+package dev.calebmiller.application.features.forecast.data.remote
 
-import dev.calebmiller.application.service.mapbox.MapboxService
-import dev.calebmiller.application.service.mapbox.api.MapboxApiException
+import dev.calebmiller.application.features.forecast.data.dto.mapbox.MapboxApiException
+import dev.calebmiller.application.getAppTestModule
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*

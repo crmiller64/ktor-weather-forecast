@@ -1,4 +1,4 @@
-package dev.calebmiller.application.service.mapbox.api
+package dev.calebmiller.application.features.forecast.data.dto.mapbox
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

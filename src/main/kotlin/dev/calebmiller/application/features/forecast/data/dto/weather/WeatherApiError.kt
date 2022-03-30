@@ -1,4 +1,4 @@
-package dev.calebmiller.application.service.weather.api
+package dev.calebmiller.application.features.forecast.data.dto.weather
 
 import kotlinx.serialization.Serializable
 

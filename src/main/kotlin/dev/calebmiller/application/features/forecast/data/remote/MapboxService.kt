@@ -1,9 +1,9 @@
-package dev.calebmiller.application.service.mapbox
+package dev.calebmiller.application.features.forecast.data.remote
 
 import dev.calebmiller.application.config.AppConfig
-import dev.calebmiller.application.service.mapbox.api.ForwardGeocode
-import dev.calebmiller.application.service.mapbox.api.MapboxApiError
-import dev.calebmiller.application.service.mapbox.api.MapboxApiException
+import dev.calebmiller.application.features.forecast.data.dto.mapbox.ForwardGeocode
+import dev.calebmiller.application.features.forecast.data.dto.mapbox.MapboxApiError
+import dev.calebmiller.application.features.forecast.data.dto.mapbox.MapboxApiException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*

@@ -1,7 +1,7 @@
-package dev.calebmiller.application
+package dev.calebmiller.application.features.forecast.data.remote
 
-import dev.calebmiller.application.service.weather.WeatherService
-import dev.calebmiller.application.service.weather.api.WeatherApiException
+import dev.calebmiller.application.features.forecast.data.dto.weather.WeatherApiException
+import dev.calebmiller.application.getAppTestModule
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*
@@ -35,7 +35,7 @@ class WeatherServiceTest: AutoCloseKoinTest() {
         startKoin { modules(getAppTestModule(mockEngine)) }
         val weatherService = get<WeatherService>()
 
-        val response = weatherService.getWeatherForecast("https://api.weather.gov/gridpoints/DTX/32,89/forecast")
+        val response = weatherService.getDailyWeatherForecast("https://api.weather.gov/gridpoints/DTX/32,89/forecast")
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -55,7 +55,7 @@ class WeatherServiceTest: AutoCloseKoinTest() {
         startKoin { modules(getAppTestModule(mockEngine)) }
         val weatherService = get<WeatherService>()
 
-        val response = weatherService.getWeatherForecast("https://api.weather.gov/gridpoints/DTX/0,0/forecast")
+        val response = weatherService.getDailyWeatherForecast("https://api.weather.gov/gridpoints/DTX/0,0/forecast")
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
 
@@ -98,7 +98,7 @@ class WeatherServiceTest: AutoCloseKoinTest() {
         startKoin { modules(getAppTestModule(mockEngine)) }
         val weatherService = get<WeatherService>()
 
-        val forecast = weatherService.getWeatherForecast("bay city", "mi")
+        val forecast = weatherService.getDailyWeatherForecast("bay city", "mi")
         assertEquals(14, forecast.properties.periods.size)
     }
 
@@ -132,7 +132,7 @@ class WeatherServiceTest: AutoCloseKoinTest() {
         startKoin { modules(getAppTestModule(mockEngine)) }
         val weatherService = get<WeatherService>()
 
-        val forecast = weatherService.getWeatherForecast(39.7456, -97.0892)
+        val forecast = weatherService.getDailyWeatherForecast(39.7456, -97.0892)
         assertEquals(14, forecast.properties.periods.size)
     }
 
@@ -167,9 +167,80 @@ class WeatherServiceTest: AutoCloseKoinTest() {
         val weatherService = get<WeatherService>()
 
         val exception = assertFailsWith<WeatherApiException> {
-            weatherService.getWeatherForecast(90.0, -180.0)
+            weatherService.getDailyWeatherForecast(90.0, -180.0)
         }
-        assertEquals("Error fetching weather forecast data from weather API.", exception.message)
+        assertEquals("Error fetching daily weather forecast data from weather API.", exception.message)
+        assertEquals("An unexpected problem has occurred.", exception.error.detail)
+    }
+
+    @Test
+    fun getHourlyWeatherForecast_whenValidLocation_thenNonNullResponse() = runTest {
+        val weatherGridResponseBody = Files.readAllBytes(Path(
+            "src/test/resources/weatherGovApiResponses/weatherGridResponse.json"
+        ))
+        val forecastResponseBody = Files.readAllBytes(Path(
+            "src/test/resources/weatherGovApiResponses/hourlyForecastResponse.json"
+        ))
+        val mockEngine = MockEngine { request ->
+            if (request.url.encodedPath.startsWith("/points")) {
+                respond(
+                    content = ByteReadChannel(weatherGridResponseBody),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            } else if (request.url.encodedPath.endsWith("/hourly")) {
+                respond(
+                    content = ByteReadChannel(forecastResponseBody),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            } else {
+                error("Unhandled ${request.url.encodedPath}")
+            }
+
+        }
+
+        startKoin { modules(getAppTestModule(mockEngine)) }
+        val weatherService = get<WeatherService>()
+
+        val forecast = weatherService.getHourlyWeatherForecast(90.0, 90.0)
+        assertEquals(156, forecast.properties.periods.size)
+    }
+
+    @Test
+    fun getHourlyWeatherForecast_whenWeatherApiServerErrorResponse_thenExceptionThrown() = runTest {
+        val weatherGridResponseBody = Files.readAllBytes(Path(
+            "src/test/resources/weatherGovApiResponses/weatherGridResponse.json"
+        ))
+        val forecastResponseBody = Files.readAllBytes(Path(
+            "src/test/resources/weatherGovApiResponses/forecastErrorResponse.json"
+        ))
+        val mockEngine = MockEngine { request ->
+            if (request.url.encodedPath.startsWith("/points")) {
+                respond(
+                    content = ByteReadChannel(weatherGridResponseBody),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            } else if (request.url.encodedPath.endsWith("/hourly")) {
+                respond(
+                    content = ByteReadChannel(forecastResponseBody),
+                    status = HttpStatusCode.InternalServerError,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            } else {
+                error("Unhandled ${request.url.encodedPath}")
+            }
+
+        }
+
+        startKoin { modules(getAppTestModule(mockEngine)) }
+        val weatherService = get<WeatherService>()
+
+        val exception = assertFailsWith<WeatherApiException> {
+            weatherService.getHourlyWeatherForecast(90.0, 90.0)
+        }
+        assertEquals("Error fetching hourly weather forecast data from weather API.", exception.message)
         assertEquals("An unexpected problem has occurred.", exception.error.detail)
     }
 
