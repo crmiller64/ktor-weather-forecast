@@ -1,4 +1,4 @@
-package dev.calebmiller.application.features.forecast.data.dto.weather
+package dev.calebmiller.application.util
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

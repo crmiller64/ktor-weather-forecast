@@ -1,5 +1,6 @@
 package dev.calebmiller.application.features.forecast.data.dto.weather
 
+import dev.calebmiller.application.util.OffsetDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
