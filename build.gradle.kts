@@ -36,6 +36,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_datetime_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.github.microutils:kotlin-logging-jvm:$kotlin_logging_version")

@@ -1,27 +1,17 @@
 package dev.calebmiller.application.features.forecast.domain
 
-import dev.calebmiller.application.features.forecast.domain.model.DailyForecastDTO
-import dev.calebmiller.application.features.forecast.data.dto.weather.WeatherApiException
-import dev.calebmiller.application.features.forecast.data.remote.WeatherService
+import dev.calebmiller.application.features.forecast.data.dto.openweather.OpenWeatherApiException
+import dev.calebmiller.application.features.forecast.data.remote.OpenWeatherService
 import dev.calebmiller.application.features.forecast.domain.mapper.toDTO
-import dev.calebmiller.application.features.forecast.domain.model.HourlyForecastDTO
+import dev.calebmiller.application.features.forecast.domain.model.ForecastDTO
 
-class ForecastRepository(private val weatherService: WeatherService) {
+class ForecastRepository(private val openWeatherService: OpenWeatherService) {
 
-    suspend fun getDailyForecast(city: String, state: String): DailyForecastDTO {
+    suspend fun getForecast(city: String, state: String): ForecastDTO {
         try {
-            val dailyWeatherForecast = weatherService.getDailyWeatherForecast(city, state)
-            return dailyWeatherForecast.toDTO()
-        } catch (e: WeatherApiException) {
-            throw Exception(e.message)
-        }
-    }
-
-    suspend fun getHourlyForecast(city: String, state: String): HourlyForecastDTO {
-        try {
-            val hourlyWeatherForecast = weatherService.getHourlyWeatherForecast(city, state)
-            return hourlyWeatherForecast.toDTO()
-        } catch (e: WeatherApiException) {
+            val forecast = openWeatherService.getWeatherForecast(city, state)
+            return forecast.toDTO()
+        } catch (e: OpenWeatherApiException) {
             throw Exception(e.message)
         }
     }

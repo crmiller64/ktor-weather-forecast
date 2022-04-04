@@ -12,11 +12,8 @@ import org.koin.ktor.ext.inject
 @Location("/forecast")
 class ForecastEndpoint {
 
-    @Location("/day")
-    data class DailyForecast(val parent: ForecastEndpoint, val city: String, val state: String)
-
-    @Location("/hour")
-    data class HourlyForecast(val parent: ForecastEndpoint, val city: String, val state: String)
+    @Location("")
+    data class Forecast(val parent: ForecastEndpoint, val city: String, val state: String)
 }
 
 @OptIn(KtorExperimentalLocationsAPI::class)
@@ -24,24 +21,13 @@ fun Route.forecastEndpoint() {
 
     val forecastRepository: ForecastRepository by inject()
 
-    get<ForecastEndpoint.DailyForecast> {
+    get<ForecastEndpoint.Forecast> {
         try {
-            call.respond(forecastRepository.getDailyForecast(it.city, it.state))
+            call.respond(forecastRepository.getForecast(it.city, it.state))
         } catch (e: Exception) {
             call.respond(
                 HttpStatusCode.InternalServerError,
-                "Error retrieving weather data. Please check server logs for details"
-            )
-        }
-    }
-
-    get<ForecastEndpoint.HourlyForecast> {
-        try {
-            call.respond(forecastRepository.getHourlyForecast(it.city, it.state))
-        } catch (e: Exception) {
-            call.respond(
-                HttpStatusCode.InternalServerError,
-                "Error retrieving weather data. Please check server logs for details"
+                "Error retrieving weather data. Please check server logs for details."
             )
         }
     }
