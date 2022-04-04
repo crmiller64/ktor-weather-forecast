@@ -12,13 +12,14 @@ fun OpenWeatherOneCall.toDTO(): ForecastDTO {
         this.current.feelsLike,
         this.current.windSpeed,
         toDirection(this.current.windDirection),
+        "mph",
         this.current.weather[0].description.replaceFirstChar { it.uppercaseChar() }
     )
 
     val days = this.daily.map { d ->
         Day(
             d.date,
-            d.date.dayOfWeek.name,
+            d.date.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercaseChar() },
             d.sunrise,
             d.sunset,
             d.temperature.max,
@@ -26,6 +27,7 @@ fun OpenWeatherOneCall.toDTO(): ForecastDTO {
             "F",
             d.windSpeed,
             toDirection(d.windDirection),
+            "mph",
             d.weather[0].description.replaceFirstChar { it.uppercaseChar() },
             d.humidity
         )
@@ -39,6 +41,7 @@ fun OpenWeatherOneCall.toDTO(): ForecastDTO {
             h.feelsLike,
             h.windSpeed,
             toDirection(h.windDirection),
+            "mph",
             h.weather[0].description.replaceFirstChar { it.uppercaseChar() },
             h.probabilityOfPrecipitation
         )

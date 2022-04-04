@@ -20,6 +20,7 @@ data class Current(
     val feelsLike: Double,
     val windSpeed: Double,
     val windDirection: String,
+    val windUnit: String,
     val description: String
 )
 
@@ -37,6 +38,7 @@ data class Day(
     val temperatureUnit: String,
     val windSpeed: Double,
     val windDirection: String,
+    val windUnit: String,
     val description: String,
     val humidity: Int
 )
@@ -50,6 +52,7 @@ data class Hour(
     val feelsLike: Double,
     val windSpeed: Double,
     val windDirection: String,
+    val windUnit: String,
     val description: String,
     val probabilityOfPrecipitation: Double
 )

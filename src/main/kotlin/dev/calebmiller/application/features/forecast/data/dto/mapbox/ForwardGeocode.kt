@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 /* Representation of forward geocoding data received from the Mapbox API. */
 
 @Serializable
-data class ForwardGeocode (
+data class ForwardGeocode(
     val type: String,
     val query: Array<String>,
-    val features: Array<ForwardGeocodeFeature>,
+    val features: Array<Feature>,
     val attribution: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -37,7 +37,7 @@ data class ForwardGeocode (
 }
 
 @Serializable
-data class ForwardGeocodeFeature(
+data class Feature(
     val id: String,
     val type: String,
     @SerialName("place_type") val placeType: Array<String>,
@@ -54,7 +54,7 @@ data class ForwardGeocodeFeature(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ForwardGeocodeFeature
+        other as Feature
 
         if (id != other.id) return false
         if (type != other.type) return false
