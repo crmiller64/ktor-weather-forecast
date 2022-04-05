@@ -64,7 +64,7 @@ const Location = props => {
                 {props.placeName &&
                     <div>
                         <i className="bi bi-info-circle text-primary pe-1"></i>
-                        <small>Currently showing forecast for
+                        <small>Currently showing the forecast for
                             <span className="fst-italic"> {props.placeName}</span>.
                         </small>
                     </div>

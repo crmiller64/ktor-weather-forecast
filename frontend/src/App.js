@@ -21,7 +21,7 @@ function App() {
         setForecast(null);
         setError(null);
         // send request to KTOR web-service
-        axios.get(`http://localhost:${port}/forecast?city=${city}&state=${state}`)
+        axios.get(`/forecast?city=${city}&state=${state}`)
             .then(response => {
                 console.log(response.data);
                 setForecast(response.data);

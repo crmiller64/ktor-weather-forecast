@@ -1,6 +1,7 @@
-# kotlin-weather-forecast
+# ktor-weather-forecast
 
 # Running
+
 Use the following command to run the app:
 `./gradlew run --continuous`
 

@@ -42,7 +42,7 @@ class MapboxService(engine: HttpClientEngine, appConfig: AppConfig) {
      * longitude and the second element is the latitude
      */
     @Throws(MapboxApiException::class)
-    suspend fun getCoordinates(city: String, state: String): Array<Double> {
+    suspend fun getCoordinates(city: String, state: String): List<Double> {
         val forwardGeocode = getForwardGeocoding(city, state)
         return forwardGeocode.features[0].geometry.coordinates
     }
@@ -60,7 +60,7 @@ class MapboxService(engine: HttpClientEngine, appConfig: AppConfig) {
             url {
                 protocol = URLProtocol.HTTPS
                 host = mapboxApiHost
-                path("geocoding", "v5", "mapbox.places", "${city} ${state}", ".json")
+                path("geocoding", "v5", "mapbox.places", "$city $state", ".json")
                 parameter("limit", 1)
                 parameter("access_token", mapboxAccessToken)
             }
@@ -70,7 +70,7 @@ class MapboxService(engine: HttpClientEngine, appConfig: AppConfig) {
             return response.receive()
         } else {
             val error: MapboxApiError = response.receive()
-            logger.error{ "Error retrieving geocoding data: \n$error" }
+            logger.error { "Error retrieving geocoding data: \n$error" }
             throw MapboxApiException("Error fetching geocoding data from Mapbox API.", error)
         }
     }
