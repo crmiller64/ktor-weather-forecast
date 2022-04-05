@@ -6,6 +6,7 @@ import java.time.OffsetDateTime
 
 @Serializable
 data class ForecastDTO(
+    var placeName: String,
     val current: Current,
     val daily: List<Day>,
     val hourly: List<Hour>

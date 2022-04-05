@@ -15,7 +15,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.*
 import mu.KotlinLogging
 
-class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig, private val mapboxService: MapboxService) {
+class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig) {
 
     private val logger = KotlinLogging.logger {}
 
@@ -34,17 +34,15 @@ class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig, private
     }
 
     @Throws(OpenWeatherApiException::class)
-    suspend fun getWeatherForecast(city: String, state: String): OpenWeatherOneCall {
-        val coordinates = mapboxService.getCoordinates(city, state)
-
+    suspend fun getWeatherForecast(latitude: Double, longitude: Double): OpenWeatherOneCall {
         val response: HttpResponse = client.request {
             method = HttpMethod.Get
             url {
                 protocol = URLProtocol.HTTPS
                 host = openWeatherApiHost
                 path("data", "2.5", "onecall")
-                parameter("lat", coordinates[1])
-                parameter("lon", coordinates[0])
+                parameter("lat", latitude)
+                parameter("lon", longitude)
                 parameter("exclude", "minutely,alerts")
                 parameter("units", "imperial")
                 parameter("appid", openWeatherAccessToken)

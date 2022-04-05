@@ -24,6 +24,17 @@ export const getDate = dateTimeString => {
 
 /**
  * 
+ * @param {string} dateTimeString ISO-8601 format string representation of a date.
+ * @returns the date and time from the given datetime string formatted in full form.
+ */
+export const getDateTime = dateTimeString => {
+    const d = new Date(dateTimeString);
+    const o = new Intl.DateTimeFormat([], { dateStyle: "full", timeStyle: "short" });
+    return o.format(d);
+}
+
+/**
+ * 
  * @param {number} temperature the temperature.
  * @param {string} temperatureUnit the abbreviation for the unit used to measure the temperature (i.e. "F" for farenheit).
  * @returns a formatted string for the given temperature and temperature unit.

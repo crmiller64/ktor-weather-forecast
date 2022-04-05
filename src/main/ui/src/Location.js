@@ -61,6 +61,14 @@ const Location = props => {
                         <button className="btn btn-primary">Submit</button>
                     </div>
                 </form>
+                {props.placeName &&
+                    <div>
+                        <i className="bi bi-info-circle text-primary pe-1"></i>
+                        <small>Currently showing forecast for
+                            <span className="fst-italic"> {props.placeName}</span>.
+                        </small>
+                    </div>
+                }
             </div>
         </div>
     );

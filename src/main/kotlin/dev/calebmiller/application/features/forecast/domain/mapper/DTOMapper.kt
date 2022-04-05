@@ -47,7 +47,7 @@ fun OpenWeatherOneCall.toDTO(): ForecastDTO {
         )
     }
 
-    return ForecastDTO(current, days, hours)
+    return ForecastDTO("", current, days, hours)
 }
 
 // Convert a wind direction in degrees to a string. Taken from: https://stackoverflow.com/a/61077325

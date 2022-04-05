@@ -11,6 +11,6 @@ val appModule = module {
     single { CIO.create() }
     single { AppConfig() }
     single { MapboxService(get(), get()) }
-    single { OpenWeatherService(get(), get(), get()) }
-    single { ForecastRepository(get()) }
+    single { OpenWeatherService(get(), get()) }
+    single { ForecastRepository(get(), get()) }
 }

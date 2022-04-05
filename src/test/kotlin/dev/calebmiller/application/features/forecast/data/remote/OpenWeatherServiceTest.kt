@@ -22,38 +22,23 @@ class OpenWeatherServiceTest : AutoCloseKoinTest() {
 
     @Test
     fun getOneCallForecast_whenValidRequest_thenForecastDataReturned() = runTest {
-        val forwardGeocodingResponseBody = Files.readAllBytes(
-            Path(
-                "src/test/resources/mapboxApiResponses/forwardGeocodingResponse.json"
-            )
-        )
         val responseBody = Files.readAllBytes(
             Path(
                 "src/test/resources/openWeatherApiResponses/oneCallResponse.json"
             )
         )
         val mockEngine = MockEngine { request ->
-            if (request.url.encodedPath.startsWith("/geocoding")) {
-                respond(
-                    content = ByteReadChannel(forwardGeocodingResponseBody),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            } else if (request.url.encodedPath.contains("/onecall")) {
-                respond(
-                    content = ByteReadChannel(responseBody),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            } else {
-                error("Unhandled ${request.url.encodedPath}")
-            }
+            respond(
+                content = ByteReadChannel(responseBody),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
         startKoin { modules(getAppTestModule(mockEngine)) }
         val openWeatherService = get<OpenWeatherService>()
 
-        val response = openWeatherService.getWeatherForecast("bay city", "mi")
+        val response = openWeatherService.getWeatherForecast(90.0, 90.0)
         assertEquals(43.3, response.current.temperature)
         assertEquals(48, response.hourly.size)
         assertEquals(8, response.daily.size)
@@ -61,39 +46,24 @@ class OpenWeatherServiceTest : AutoCloseKoinTest() {
 
     @Test
     fun getOneCallForecast_whenInvalidRequest_thenExceptionThrown() = runTest {
-        val forwardGeocodingResponseBody = Files.readAllBytes(
-            Path(
-                "src/test/resources/mapboxApiResponses/forwardGeocodingResponse.json"
-            )
-        )
         val responseBody = Files.readAllBytes(
             Path(
                 "src/test/resources/openWeatherApiResponses/oneCallUnauthorizedResponse.json"
             )
         )
         val mockEngine = MockEngine { request ->
-            if (request.url.encodedPath.startsWith("/geocoding")) {
-                respond(
-                    content = ByteReadChannel(forwardGeocodingResponseBody),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            } else if (request.url.encodedPath.contains("/onecall")) {
-                respond(
-                    content = ByteReadChannel(responseBody),
-                    status = HttpStatusCode.InternalServerError,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            } else {
-                error("Unhandled ${request.url.encodedPath}")
-            }
+            respond(
+                content = ByteReadChannel(responseBody),
+                status = HttpStatusCode.InternalServerError,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
         startKoin { modules(getAppTestModule(mockEngine)) }
         val openWeatherService = get<OpenWeatherService>()
 
         val exception = assertFailsWith<OpenWeatherApiException> {
-            openWeatherService.getWeatherForecast("bay city", "mi")
+            openWeatherService.getWeatherForecast(90.0, 90.0)
         }
         assertEquals("Error fetching weather forecast data from OpenWeather API.", exception.message)
         assertContains(exception.error.message, "Invalid API key.")

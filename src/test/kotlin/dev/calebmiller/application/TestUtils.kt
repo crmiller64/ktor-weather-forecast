@@ -21,6 +21,6 @@ fun getAppTestModule(engine: HttpClientEngine): Module {
     return module {
         single { getTestAppConfig() }
         single { MapboxService(engine, get()) }
-        single { OpenWeatherService(engine, get(), get()) }
+        single { OpenWeatherService(engine, get()) }
     }
 }
