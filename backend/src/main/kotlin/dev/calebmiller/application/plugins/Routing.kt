@@ -5,7 +5,6 @@ import io.ktor.application.*
 import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
-import java.io.File
 
 fun Application.configureRouting() {
     install(Locations)
@@ -21,9 +20,14 @@ fun Application.configureRouting() {
             }
         }
         static("/") {
-            staticBasePackage = "public"
-            resources(".")
-            defaultResource("index.html")
+            // swagger assets
+            resources("doc")
+            // frontend assets
+            resources("public")
+            defaultResource("public/index.html")
+        }
+        static("/doc") {
+            defaultResource("doc/index.html")
         }
         forecastEndpoint()
     }

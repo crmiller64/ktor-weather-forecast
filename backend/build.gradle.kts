@@ -6,10 +6,13 @@ val kotlin_datetime_version: String by project
 val koin_version: String by project
 val koin_test_version: String by project
 val kotlin_logging_version: String by project
+// command line argument
+val skipFrontend: String by project
 
 plugins {
     application
     id("org.siouan.frontend-jdk11")
+    id("org.hidetake.swagger.generator") version "2.19.2"
 
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
@@ -56,6 +59,8 @@ dependencies {
 
     testImplementation("io.insert-koin:koin-test:$koin_version")
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
+
+    swaggerUI("org.webjars:swagger-ui:3.52.5")
 }
 
 tasks.test {
@@ -66,6 +71,20 @@ tasks.create("stage") {
     dependsOn("installDist")
 }
 
+swaggerSources {
+    this.create("forecast") {
+        this.ui.apply {
+            inputFile = file("${project.projectDir}/src/main/resources/swagger/oas3.yaml")
+            outputDir = file("${project.projectDir}/src/main/resources/doc")
+        }
+    }
+}
+
+tasks.build {
+    dependsOn(tasks.generateSwaggerUI)
+}
+
+// frontend build
 tasks.register<Copy>("processFrontendResources") {
     // Directory containing the artifacts in the frontend project
     val frontendBuildDir = file("${project(":frontend").buildDir}")
@@ -82,5 +101,8 @@ tasks.register<Copy>("processFrontendResources") {
 }
 
 tasks.named("processResources") {
-    dependsOn("processFrontendResources")
+    // skip frontend build if directed
+    if (!project.hasProperty("skipFrontend")) {
+        dependsOn("processFrontendResources")
+    }
 }
