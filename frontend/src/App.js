@@ -9,19 +9,16 @@ import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 
 function App() {
-    const [forecast, setForecast] = useState(null)
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    // set port to same as host for heroku deployment
-    const port = process.env.PORT || 9090;
+    const [ forecast, setForecast ] = useState(null)
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ error, setError ] = useState(null);
 
     const handleSubmit = (city, state) => {
         setIsLoading(true);
         setForecast(null);
         setError(null);
         // send request to KTOR web-service
-        axios.get(`/forecast?city=${city}&state=${state}`)
+        axios.get(`/forecast?city=${ city }&state=${ state }`)
             .then(response => {
                 console.log(response.data);
                 setForecast(response.data);
@@ -37,44 +34,44 @@ function App() {
 
     return (
         <div className="container my-5">
-            {error &&
+            { error &&
                 <div className="alert alert-danger" role="alert">
-                    {error.message}
+                    { error.message }
                 </div>
             }
             <h1>Weather Forecast</h1>
             <div className="row mt-1 gy-3">
                 <div className="col-md-6">
                     <Location
-                        onSubmit={(city, state) => handleSubmit(city, state)}
-                        placeName={forecast ? forecast.placeName : ""}
+                        onSubmit={ (city, state) => handleSubmit(city, state) }
+                        placeName={ forecast ? forecast.placeName : "" }
                     />
                 </div>
-                {!isLoading && forecast &&
+                { !isLoading && forecast &&
                     <div className="col-md-6">
                         <CurrentForecast
-                            forecast={forecast.current}
+                            forecast={ forecast.current }
                         />
                     </div>
                 }
             </div>
-            {isLoading &&
+            { isLoading &&
                 <div class="d-flex justify-content-center">
                     <div class="spinner-grow text-primary m-5" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             }
-            {!isLoading && forecast &&
+            { !isLoading && forecast &&
                 <div className="row mt-1 gy-3">
                     <div className="col-md-6">
                         <HourlyForecast
-                            hourlyForecasts={forecast.hourly}
+                            hourlyForecasts={ forecast.hourly }
                         />
                     </div>
                     <div className="col-md-6">
                         <DailyForecast
-                            dailyForecasts={forecast.daily}
+                            dailyForecasts={ forecast.daily }
                         />
                     </div>
                 </div>
