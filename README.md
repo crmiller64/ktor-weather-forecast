@@ -6,6 +6,12 @@ Credit to Marco Gomiero's guide
 to [Structuring a Ktor project](https://www.marcogomiero.com/posts/2021/ktor-project-structure/) - without such a
 resource this project would have been much tougher than it was.
 
+## APIs
+
+This project makes use of APIs from [Mapbox](https://www.mapbox.com/) and [OpenWeather](https://openweathermap.org/), as
+such you will need to have valid API keys with both services before you can run this app. These services where chosen as
+they offer free plans.
+
 ## Building
 
 ### Full App
