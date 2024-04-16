@@ -9,7 +9,7 @@ resource this project would have been much tougher than it was.
 ## APIs
 
 This project makes use of APIs from [Mapbox](https://www.mapbox.com/) and [OpenWeather](https://openweathermap.org/), as
-such you will need to have valid API keys with both services before you can run this app. These services where chosen as
+such you will need to have valid API keys with both services before you can run this app. These services were chosen as
 they offer free plans.
 
 ## Building
@@ -20,14 +20,14 @@ Execute the following command from the top-level directory of the project:
 
 `./gradlew build`
 
-This build will build the frontend subproject using
-the [Frontend Gradle Plugin](https://github.com/Siouan/frontend-gradle-plugin), then copy the assets from the frontend
+This command will build the frontend subproject using
+the [Frontend Gradle Plugin](https://github.com/Siouan/frontend-gradle-plugin), and then copy the assets from the frontend
 into the backend resources, which will then be served from the Ktor backend.
 
 ### Backend Only
 
 If you want to build just the backend subproject you can pass a `skipFrontend` arg to the `build` command noted in
-the **Building the Full App** section above. To build just the backend code execute the following command from the
+the **Building the Full App** section above. To build just the backend execute the following command from the
 top-level directory of the project:
 
 `./gradlew :backend:build -PskipFrontend`

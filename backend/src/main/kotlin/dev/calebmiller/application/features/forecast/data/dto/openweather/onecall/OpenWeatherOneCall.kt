@@ -1,4 +1,4 @@
-package dev.calebmiller.application.features.forecast.data.dto.openweather
+package dev.calebmiller.application.features.forecast.data.dto.openweather.onecall
 
 import dev.calebmiller.application.util.UnixDateTimeSerializer
 import kotlinx.datetime.TimeZone

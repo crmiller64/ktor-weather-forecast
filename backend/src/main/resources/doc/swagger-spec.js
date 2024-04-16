@@ -49,6 +49,50 @@ window.swaggerSpec={
           }
         }
       }
+    },
+    "/forecast/current" : {
+      "get" : {
+        "summary" : "Get the current forecast for the given location.",
+        "parameters" : [ {
+          "name" : "city",
+          "in" : "query",
+          "description" : "The city to retrieve the forecast for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "state",
+          "in" : "query",
+          "description" : "The state to retrieve the forecast for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "CurrentForecastDTO",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CurrentForecastDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "InternalServerError",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -192,6 +236,41 @@ window.swaggerSpec={
           "probabilityOfPrecipitation" : {
             "type" : "number",
             "format" : "double"
+          }
+        }
+      },
+      "CurrentForecastDTO" : {
+        "type" : "object",
+        "properties" : {
+          "placeName" : {
+            "type" : "string"
+          },
+          "date" : {
+            "type" : "string"
+          },
+          "temperature" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "temperatureUnit" : {
+            "type" : "string"
+          },
+          "feelsLike" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "windSpeed" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "windDirection" : {
+            "type" : "string"
+          },
+          "windUnit" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
           }
         }
       },

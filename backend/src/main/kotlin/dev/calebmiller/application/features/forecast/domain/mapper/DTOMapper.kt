@@ -1,6 +1,7 @@
 package dev.calebmiller.application.features.forecast.domain.mapper
 
-import dev.calebmiller.application.features.forecast.data.dto.openweather.OpenWeatherOneCall
+import dev.calebmiller.application.features.forecast.data.dto.openweather.current.OpenWeatherCurrent
+import dev.calebmiller.application.features.forecast.data.dto.openweather.onecall.OpenWeatherOneCall
 import dev.calebmiller.application.features.forecast.domain.model.*
 import kotlin.math.roundToInt
 
@@ -48,6 +49,20 @@ fun OpenWeatherOneCall.toDTO(): ForecastDTO {
     }
 
     return ForecastDTO("", current, days, hours)
+}
+
+fun OpenWeatherCurrent.toDTO(): CurrentForecastDTO {
+    return CurrentForecastDTO(
+        "",
+        this.date,
+        this.main.temperature,
+        "F",
+        this.main.feelsLike,
+        this.wind.speed,
+        toDirection(this.wind.direction),
+        "mph",
+        this.weather[0].description.replaceFirstChar { it.uppercaseChar() }
+    )
 }
 
 // Convert a wind direction in degrees to a string. Taken from: https://stackoverflow.com/a/61077325
