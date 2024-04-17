@@ -122,3 +122,35 @@ docker run \
     -e OPEN_WEATHER_TOKEN=YOUR_TOKEN \
     ktor-weather-forecast
 ```
+
+Tail container logs:
+
+```shell
+docker logs --follow --tail=100 <container-id>
+```
+
+### Docker Compose
+
+#### Build
+
+```shell
+docker compose build
+```
+
+#### Start
+
+```shell
+docker compose up -d
+```
+
+#### Build & Start
+
+```shell
+docker compose up --build -d
+```
+
+#### Stop
+
+```shell
+docker compose down
+```

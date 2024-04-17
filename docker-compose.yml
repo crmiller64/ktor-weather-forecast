@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # ensure that this port mapping matches the PORT environment variable in any *.env file, if set
+      - "9090:9090"
+    env_file:
+      - path: ./backend.env
+        required: true # default
+      - path: ./.env  # put your own access tokens here
+        required: false
