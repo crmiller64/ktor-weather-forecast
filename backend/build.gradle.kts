@@ -81,6 +81,17 @@ tasks.create("stage") {
 }
 
 // FRONTEND BUILD
+frontend {
+    nodeVersion.set("17.6.0")
+    nodeInstallDirectory.set(file("${rootDir}/frontend/node"))
+    packageJsonDirectory.set(file("${rootDir}/frontend"))
+    cacheDirectory.set(file("${rootDir}/.frontend-gradle-plugin"))
+    assembleScript.set("run build")
+    cleanScript.set("run clean")
+    checkScript.set("run check")
+    verboseModeEnabled.set(true)
+}
+
 tasks.register<Copy>("processFrontendResources") {
     // Directory containing the artifacts in the frontend project
     val frontendBuildDir = file("${project(":frontend").buildDir}")

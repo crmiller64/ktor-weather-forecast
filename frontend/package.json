@@ -6,6 +6,7 @@
   "license": "BSD-3-Clause",
   "author": "Caleb Miller <crmiller128@gmail.com> (https://calebmiller.dev/)",
   "main": "index.js",
+  "packageManager": "npm@8.5.1",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
