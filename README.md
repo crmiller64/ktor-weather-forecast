@@ -98,3 +98,27 @@ Execute the following command from the frontend directory of the project:
 
 Open a web browser to:
 http://localhost:3000/
+
+## Docker
+
+### Build Image
+
+Execute the following command from the root directory of the project:
+
+```shell
+docker build -t ktor-weather-forecast .
+```
+
+### Run Image
+
+Execute the following command after building the image:
+
+```shell
+docker run \
+    -p 9090:9090 \
+    # Optional - if you define a different port change the port mapping above to match the new port
+    -e PORT=9090 \
+    -e MAPBOX_TOKEN=YOUR_TOKEN \
+    -e OPEN_WEATHER_TOKEN=YOUR_TOKEN \
+    ktor-weather-forecast
+```
