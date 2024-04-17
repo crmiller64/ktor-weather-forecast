@@ -1,3 +1,6 @@
+# Frontend Gradle plugin
+.frontend-gradle-plugin/
+
 # Compiled class file
 *.class
 
