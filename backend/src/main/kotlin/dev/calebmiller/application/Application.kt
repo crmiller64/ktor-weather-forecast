@@ -5,22 +5,30 @@ import dev.calebmiller.application.di.appModule
 import dev.calebmiller.application.plugins.configureHTTP
 import dev.calebmiller.application.plugins.configureRouting
 import dev.calebmiller.application.plugins.configureSerialization
-import io.ktor.application.*
-import org.koin.core.module.Module
-import org.koin.ktor.ext.Koin
-import org.koin.logger.SLF4JLogger
+import io.ktor.server.application.*
+import io.ktor.server.netty.Netty
+import io.ktor.server.engine.commandLineEnvironment
+import io.ktor.server.engine.embeddedServer
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>) {
+    // Start Ktor
+    embeddedServer(Netty, commandLineEnvironment(args)).start(wait = true)
+}
 
-fun Application.module(koinModules: List<Module> = listOf(appModule)) {
+fun Application.module() {
+    // Load modules that specify plugin configurations
     configureHTTP()
     configureRouting()
     configureSerialization()
 
+    // Load Koin appModule for dependency injection (DI)
     install(Koin) {
-        SLF4JLogger()
+        slf4jLogger()
         modules(appModule)
     }
 
+    // Execute configuration setup after app start
     setupConfig()
 }

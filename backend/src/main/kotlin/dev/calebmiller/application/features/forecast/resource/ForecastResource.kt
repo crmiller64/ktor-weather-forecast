@@ -1,25 +1,26 @@
 package dev.calebmiller.application.features.forecast.resource
 
 import dev.calebmiller.application.features.forecast.domain.ForecastRepository
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.resources.*
+import io.ktor.server.application.*
+import io.ktor.server.resources.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-@OptIn(KtorExperimentalLocationsAPI::class)
-@Location("/forecast")
+/* ROUTE / ENDPOINT DEFINITIONS */
+@Resource("/forecast")
 class ForecastEndpoint {
 
-    @Location("")
-    data class Forecast(val parent: ForecastEndpoint, val city: String, val state: String)
+    @Resource("")
+    class Forecast(val parent: ForecastEndpoint = ForecastEndpoint(), val city: String, val state: String)
 
-    @Location("/current")
-    data class CurrentForecast(val parent: ForecastEndpoint, val city: String, val state: String)
+    @Resource("/current")
+    class CurrentForecast(val parent: ForecastEndpoint = ForecastEndpoint(), val city: String, val state: String)
 }
 
-@OptIn(KtorExperimentalLocationsAPI::class)
+// ROUTE / ENDPOINT HANDLERS
 fun Route.forecastEndpoint() {
 
     val forecastRepository: ForecastRepository by inject()

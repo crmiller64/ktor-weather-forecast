@@ -21,7 +21,8 @@ Execute the following command from the top-level directory of the project:
 `./gradlew build`
 
 This command will build the frontend subproject using
-the [Frontend Gradle Plugin](https://github.com/Siouan/frontend-gradle-plugin), and then copy the assets from the frontend
+the [Frontend Gradle Plugin](https://github.com/Siouan/frontend-gradle-plugin), and then copy the assets from the
+frontend
 into the backend resources, which will then be served from the Ktor backend.
 
 ### Backend Only
@@ -32,19 +33,14 @@ top-level directory of the project:
 
 `./gradlew :backend:build -PskipFrontend`
 
-#### Generating Backend API Documentation
+#### Backend API Documentation
 
 The `oas3.yaml` file contains the [OpenAPI](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md)
 spec for the backend API. This project uses
-the [Gradle Swagger Generator Plugin](https://github.com/int128/gradle-swagger-generator-plugin) to generate Swagger
-documentation from the `oas3.yaml` file. The documentation generation process is set up to be run with every build of
-the backend project.
+the [Ktor OpenAPI Plugin](https://ktor.io/docs/server-openapi.html) to generate the API
+documentation from the `oas3.yaml` file.
 
-To rebuild the backend API docs manually execute the following command from the top-level directory of the project:
-
-`./gradlew :backend:generateSwaggerUI`
-
-To access the Swagger docs for the backend open a web browser to http://localhost:9090/doc when the backend app is
+To access the API docs for the backend, open a web browser to http://localhost:9090/doc when the backend app is
 running.
 
 ### Frontend Only

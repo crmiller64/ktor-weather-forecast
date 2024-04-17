@@ -1,8 +1,9 @@
 package dev.calebmiller.application.plugins
 
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.cors.routing.*
 
 fun Application.configureHTTP() {
     install(Compression) {
@@ -15,12 +16,11 @@ fun Application.configureHTTP() {
         }
     }
     install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
-        method(HttpMethod.Patch)
-        header(HttpHeaders.Authorization)
-        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Patch)
+        allowMethod(HttpMethod.Delete)
+        allowHeader(HttpHeaders.Authorization)
+        anyHost() // TODO: Don't do this in production if possible. Try to limit it.
     }
-
 }

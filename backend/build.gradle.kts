@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -12,14 +14,14 @@ val skipFrontend: String by project
 plugins {
     application
     id("org.siouan.frontend-jdk11")
-    id("org.hidetake.swagger.generator") version "2.19.2"
+    id("io.ktor.plugin") version "2.3.7"
 
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 group = "dev.calebmiller"
-version = "1.0.0"
+version = "1.1.0"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -34,13 +36,20 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-serialization:$ktor_version")
-    implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-resources:$ktor_version")
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
+    implementation("io.ktor:ktor-server-compression:$ktor_version")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-server-openapi:$ktor_version")
+
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
-    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-client-resources:$ktor_version")
+
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_datetime_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
@@ -60,7 +69,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:$koin_version")
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
 
-    swaggerUI("org.webjars:swagger-ui:3.52.5")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.test {
@@ -71,25 +80,14 @@ tasks.create("stage") {
     dependsOn("installDist")
 }
 
-swaggerSources {
-    this.create("forecast") {
-        this.ui.apply {
-            inputFile = file("${project.projectDir}/src/main/resources/swagger/oas3.yaml")
-            outputDir = file("${project.projectDir}/src/main/resources/doc")
-        }
-    }
-}
-
-tasks.build {
-    dependsOn(tasks.generateSwaggerUI)
-}
-
-// frontend build
+// FRONTEND BUILD
 tasks.register<Copy>("processFrontendResources") {
     // Directory containing the artifacts in the frontend project
     val frontendBuildDir = file("${project(":frontend").buildDir}")
-    // Directory where the frontend artifacts must be copied to be packaged altogether with the backend by the 'war'
-    // plugin.
+    /*
+     * Directory where the frontend artifacts must be copied to be packaged altogether with the backend
+     * by the 'war' plugin.
+     */
     val frontendResourcesDir = file("${project.buildDir}/resources/main/public")
 
     group = "Frontend"
@@ -105,4 +103,13 @@ tasks.named("processResources") {
     if (!project.hasProperty("skipFrontend")) {
         dependsOn("processFrontendResources")
     }
+}
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "11"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "11"
 }

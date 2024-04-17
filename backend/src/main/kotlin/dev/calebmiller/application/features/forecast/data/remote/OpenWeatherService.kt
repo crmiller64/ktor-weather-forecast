@@ -8,11 +8,12 @@ import dev.calebmiller.application.features.forecast.data.dto.openweather.onecal
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import io.ktor.http.*
 import mu.KotlinLogging
 
@@ -25,8 +26,8 @@ class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig) {
 
     private val client = HttpClient(engine) {
         install(Logging)
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+        install(ContentNegotiation) {
+            json(Json {
                 ignoreUnknownKeys = true
                 coerceInputValues = true
             })
@@ -51,10 +52,10 @@ class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig) {
         }
 
         if (response.status == HttpStatusCode.OK) {
-            return response.receive()
+            return response.body()
         } else {
             // error received when fetching forecast data
-            val error: OpenWeatherApiError = response.receive()
+            val error: OpenWeatherApiError = response.body()
             logger.error { "Error retrieving weather forecast data: \n$error" }
             throw OpenWeatherApiException("Error fetching weather forecast data from OpenWeather API.", error)
         }
@@ -76,10 +77,10 @@ class OpenWeatherService(engine: HttpClientEngine, appConfig: AppConfig) {
         }
 
         if (response.status == HttpStatusCode.OK) {
-            return response.receive()
+            return response.body()
         } else {
             // error received when fetching forecast data
-            val error: OpenWeatherApiError = response.receive()
+            val error: OpenWeatherApiError = response.body()
             logger.error { "Error retrieving weather forecast data: \n$error" }
             throw OpenWeatherApiException("Error fetching weather forecast data from OpenWeather API.", error)
         }

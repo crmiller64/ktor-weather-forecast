@@ -1,34 +1,23 @@
 package dev.calebmiller.application.plugins
 
 import dev.calebmiller.application.features.forecast.resource.forecastEndpoint
-import io.ktor.application.*
-import io.ktor.http.content.*
-import io.ktor.locations.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.http.content.*
+import io.ktor.server.routing.*
+import io.ktor.server.resources.*
+import io.ktor.server.plugins.openapi.*
 
 fun Application.configureRouting() {
-    install(Locations)
+    install(Resources)
 
     routing {
-        static("/static") {
-            staticBasePackage = "public/static"
-            static("/js") {
-                resources("js")
-            }
-            static("/css") {
-                resources("css")
-            }
+        // Serve the frontend app
+        singlePageApplication {
+            useResources = true
+            filesPath = "public"
+            defaultPage = "index.html"
         }
-        static("/") {
-            // swagger assets
-            resources("doc")
-            // frontend assets
-            resources("public")
-            defaultResource("public/index.html")
-        }
-        static("/doc") {
-            defaultResource("doc/index.html")
-        }
+        openAPI(path = "doc", swaggerFile = "openapi/oas3.yaml")
         forecastEndpoint()
     }
 }

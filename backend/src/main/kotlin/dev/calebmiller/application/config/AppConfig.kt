@@ -1,10 +1,10 @@
 package dev.calebmiller.application.config
 
-import io.ktor.application.*
+import io.ktor.server.application.*
 import org.koin.ktor.ext.inject
 
-const val MAPBOX_CONFIG_KEY = "ktor.mapbox"
-const val OPEN_WEATHER_CONFIG_KEY = "ktor.openWeather"
+const val MAPBOX_ACCESS_TOKEN_KEY = "ktor.mapbox.accessToken"
+const val OPEN_WEATHER_ACCESS_TOKEN_KEY = "ktor.openWeather.accessToken"
 
 class AppConfig {
     lateinit var mapboxConfig: MapboxConfig
@@ -19,14 +19,18 @@ data class OpenWeatherConfig(
     val accessToken: String
 )
 
+/*
+ * Read in environment variables and store them in an injectable AppConfig class, to be used by other
+ * services.
+ */
 fun Application.setupConfig() {
     val appConfig: AppConfig by inject()
 
-    val mapboxObject = environment.config.config(MAPBOX_CONFIG_KEY)
-    val mapboxAccessToken = mapboxObject.property("accessToken").getString()
+    val mapboxAccessToken =
+        environment.config.propertyOrNull(MAPBOX_ACCESS_TOKEN_KEY)?.getString() ?: ""
     appConfig.mapboxConfig = MapboxConfig(mapboxAccessToken)
 
-    val openWeatherObject = environment.config.config(OPEN_WEATHER_CONFIG_KEY)
-    val openWeatherAccessToken = openWeatherObject.property("accessToken").getString()
+    val openWeatherAccessToken =
+        environment.config.propertyOrNull(OPEN_WEATHER_ACCESS_TOKEN_KEY)?.getString() ?: ""
     appConfig.openWeatherConfig = OpenWeatherConfig(openWeatherAccessToken)
 }
