@@ -1,13 +1,28 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: 523180070807.dkr.ecr.us-east-1.amazonaws.com/ktor-weather-forecast:${IMAGE_TAG:-latest}
+    restart: always
     ports:
-      # ensure that this port mapping matches the PORT environment variable in any *.env file, if set
+      # Ensure that this port mapping matches the following:
+      # - The PORT environment variable in any *.env file
+      # - The specified port in the upstream block of the ./nginx/nginx.conf file
       - "9090:9090"
     env_file:
-      - path: ./backend.env
-        required: true # default
       - path: ./.env  # put your own access tokens here
         required: false
+    # Set environment variables explicitly here for AWS EB deployment.
+    # NOTE: If you use both the env_file and environment attribute, environment
+    # variables set by environment take precedence
+    environment:
+      - PORT=${PORT}
+      - MAPBOX_TOKEN=${MAPBOX_TOKEN}
+      - OPEN_WEATHER_TOKEN=${OPEN_WEATHER_TOKEN}
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
