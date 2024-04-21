@@ -154,3 +154,36 @@ docker compose up --build -d
 ```shell
 docker compose down
 ```
+
+## Deploy to AWS Elastic Beanstalk (EB)
+
+Verify that an EB environment has been built beforehand. Also verify that an Elastic Container Registry (ECR) is
+available to upload the container image to.
+
+Ensure your Docker agent is logged into the AWS ECR before building and deploying:
+
+```shell
+aws ecr get-login-password --profile <profile> --region <region> | docker login --username AWS --password-stdin <ECR registry>
+```
+
+### Build
+
+```shell
+docker buildx build --platform=linux/arm64,linux/amd64 -t ktor-weather-forecast:latest .
+docker tag ktor-weather-forecast:latest <ECR registry>
+docker push <ECR registry>
+```
+
+*Note*: A multi-platform builder may need to be created to have Docker build images with multiple architectures. Run
+these commands to create a multi-platform builder:
+
+```shell
+docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder
+docker buildx inspect --bootstrap
+```
+
+### Deploy
+
+```shell
+eb deploy <EB environment> --profile <profile>
+```
